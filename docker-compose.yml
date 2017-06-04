@@ -1,0 +1,63 @@
+version: "3.2"
+
+services:
+
+  zipkin:
+    image: openzipkin/zipkin
+    ports:
+      - 9411:9411
+    environment:
+      - SCRIBE_ENABLED=false
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.hostname == project]
+
+  mockdb:
+    image: 127.0.0.1:5000/mockdb:zipkin
+    build: mockdb
+    ports:
+      - target: 8080
+        published: 8081
+        mode: ingress
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: continue
+        monitor: 60s
+        max_failure_ratio: 0.3
+      placement:
+        constraints: [node.hostname == project]
+
+  spring:
+    image: 127.0.0.1:5000/spring:zipkin
+    build: app
+    depends_on:
+      - mockdb
+    ports:
+      - 8080:8080
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: continue
+        monitor: 60s
+        max_failure_ratio: 0.3
+      placement:
+        constraints: [node.hostname == project]

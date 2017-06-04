@@ -1,0 +1,44 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.2.RELEASE")
+        classpath "io.spring.gradle:dependency-management-plugin:0.5.2.RELEASE"
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+apply plugin: "io.spring.dependency-management"
+
+dependencyManagement {
+    imports {
+        mavenBom 'org.springframework.cloud:spring-cloud-sleuth:1.2.1.RELEASE'
+    }
+}
+
+jar {
+    baseName = 'gs-spring-boot'
+    version = '0.1.0'
+}
+
+repositories {
+    mavenCentral()
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+    compile("org.springframework.boot:spring-boot-starter-web")
+    // tag::actuator[]
+    compile("org.springframework.boot:spring-boot-starter-actuator")
+    // end::actuator[]
+    // tag::tests[]
+    compile "org.springframework.cloud:spring-cloud-starter-zipkin"
+    testCompile("org.springframework.boot:spring-boot-starter-test")
+    // end::tests[]
+}
