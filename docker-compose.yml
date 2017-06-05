@@ -41,6 +41,8 @@ services:
       - mockdb
     ports:
       - 8080:8080
+    environment:
+      JVM_OPTS: -Dnoop.count=2
     deploy:
       mode: replicated
       replicas: 1
