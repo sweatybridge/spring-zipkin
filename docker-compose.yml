@@ -19,6 +19,8 @@ services:
       - target: 8080
         published: 8081
         mode: ingress
+    environment:
+      JVM_OPTS: -Dnoop.count=31
     deploy:
       mode: replicated
       replicas: 1
@@ -41,8 +43,6 @@ services:
       - mockdb
     ports:
       - 8080:8080
-    environment:
-      JVM_OPTS: -Dnoop.count=2
     deploy:
       mode: replicated
       replicas: 1
