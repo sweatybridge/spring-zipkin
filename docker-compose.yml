@@ -20,7 +20,7 @@ services:
         published: 8081
         mode: ingress
     environment:
-      JVM_OPTS: -Dnoop.count=31
+      JVM_OPTS: -Dnoop.count=1
     deploy:
       mode: replicated
       replicas: 1
