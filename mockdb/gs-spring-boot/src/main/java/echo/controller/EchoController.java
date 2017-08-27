@@ -20,8 +20,8 @@ public class EchoController {
   }
 
   @RequestMapping("/echo")
-  public String b(@RequestParam String name) {
-    Span parent = tracer.createSpan("b");
+  public String echo(@RequestParam String name) {
+    Span parent = tracer.createSpan("echo");
     try {
       for (int i = 0; i < count; i++) {
         Span child = tracer.createSpan("noop");
