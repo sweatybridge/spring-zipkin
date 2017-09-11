@@ -9,6 +9,8 @@ import org.springframework.cloud.sleuth.instrument.async.TraceableExecutorServic
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.AsyncConfigurerSupport;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.concurrent.Executor;
@@ -34,5 +36,15 @@ public class Application extends AsyncConfigurerSupport {
   @Bean
   public RestTemplate restTemplate(RestTemplateBuilder restTemplateBuilder) {
     return restTemplateBuilder.build();
+  }
+
+  @Bean
+  public AsyncRestTemplate asyncRestTemplate() {
+    ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
+    taskExecutor.setCorePoolSize(2);
+    taskExecutor.setMaxPoolSize(2);
+    taskExecutor.setQueueCapacity(500);
+    taskExecutor.initialize();
+    return new AsyncRestTemplate(taskExecutor);
   }
 }

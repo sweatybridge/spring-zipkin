@@ -34,6 +34,7 @@ public class EchoController {
     } finally {
       tracer.close(parent);
     }
+
     return name;
   }
 
